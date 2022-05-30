@@ -9,7 +9,7 @@ function Header(props) {
     return (
         <div className={styles.header}>
             <Link href='/' className={styles.logocontainer}>
-                {/* <Logo className='logo'></Logo> */}<img src='../assets/crown.svg' />
+                <img src={Logo.src} />
             </Link>
             <div className={styles.options}>
                 <Link className={styles.option} href='/shop'>SHOP</Link>
