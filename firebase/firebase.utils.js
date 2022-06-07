@@ -17,6 +17,9 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     if (!userAuth) return;
     const userRef = firestore.doc(`users/${userAuth.uid}`);
     const snapShot = await userRef.get();
+    const collectionRef = firestore.collection('users');
+    const collectionSnapshot = await collectionRef.get();
+    console.log({ collection: collectionSnapshot.docs.map(doc => doc.data()) });
     if (!snapShot.exists) {
         const { displayName, email } = userAuth;
         const createAt = new Date();
@@ -35,6 +38,47 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 }
 
 firebase.initializeApp(config);
+
+export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => {
+    const collectionRef = firestore.collection(collectionKey)
+    const batch = firestore.batch()
+    objectsToAdd.forEach(obj => {
+        const newDocRef = collectionRef.doc()
+        batch.set(newDocRef, obj)
+    })
+    return await batch.commit()
+}
+
+export const convertCollectionsSnapshotToMap = (collections) => {
+    const transformedCollection = collections.docs.map(doc => {
+        const { title, items } = doc.data()
+        return {
+            routeName: encodeURI(title.toLowerCase()),
+            id: doc.id,
+            title,
+            items
+        }
+    })
+    return transformedCollection.reduce((accumolator, collection) => {
+        accumolator[collection.title.toLowerCase()] = collection
+        return accumolator
+    }, {})
+}
+
+export const convertPhpToMap = collections => {
+    const transformedCollection = collections.map(collection => {
+        const { title, items } = collection;
+        return {
+            routeName: encodeURI(title.toLowerCase()),
+            title,
+            items
+        }
+    })
+    return transformedCollection.reduce((accumolator, collection) => {
+        accumolator[collection.title.toLowerCase()] = collection
+        return accumolator
+    }, {})
+}
 
 export const auth = firebase.auth();
 
