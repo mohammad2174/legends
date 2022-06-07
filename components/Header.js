@@ -1,31 +1,44 @@
-import styles from '../styles/Header.module.scss'
-import Link from 'next/link';
+import React from 'react';
+import { HeaderContainer, LogoContainer, OptionContainer, OptionLink } from './HeaderStyles'
 import Logo from '../assets/crown.svg'
 import { deleteCurrentUser } from '../redux/user/user.action';
 import { connect } from 'react-redux';
+import CardIcon from './CardIcon';
+import CardDropDown from './CardDropdown'
+import { createStructuredSelector } from 'reselect'
+import { selectCardHidden } from '../redux/card/card.selectors'
+import { selectCurrentUser } from '../redux/user/user.selectors'
 
-function Header(props) {
-    const { currentUser } = props
-    return (
-        <div className={styles.header}>
-            <Link href='/' className={styles.logocontainer}>
-                <img src={Logo.src} />
-            </Link>
-            <div className={styles.options}>
-                <Link className={styles.option} href='/shop'>SHOP</Link>
-                <Link className={styles.option} href='/shop'>CONTACT</Link>
+
+class Header extends React.Component {
+    render() {
+        const { currentUser, hidden } = this.props
+        return (
+            <HeaderContainer>
+                <LogoContainer href='/'>
+                    <img src={Logo.src} />
+                </LogoContainer>
+                <OptionContainer>
+                    <OptionLink href='/shop'>SHOP</OptionLink>
+                    <OptionLink href='/shop'>CONTACT</OptionLink>
+                    {
+                        currentUser
+                            ? <OptionLink as='div' onClick={() => { this.props.deleteCurrentUser({ currentUser: null }) }}>SIGN OUT</OptionLink>
+                            : <OptionLink href='/signin'>SIGN IN</OptionLink>
+                    }
+                    <CardIcon />
+                </OptionContainer>
                 {
-                    currentUser
-                        ? <div className={styles.option} onClick={() => { this.props.deleteCurrentUser({ currentUser: null }) }}>SIGN OUT</div>
-                        : <Link className={styles.option} href='/signin'>SIGN IN</Link>
+                    hidden ? null : <CardDropDown />
                 }
-            </div>
-        </div>
-    )
+            </HeaderContainer>
+        )
+    }
 }
 
-const mapStateToProps = (state) => ({
-    currentUser: state.user.currentUser
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    hidden: selectCardHidden
 })
 
 const mapDispatchToProps = dispatch => ({
