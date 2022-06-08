@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../styles/CardDropDown.module.scss'
-import CustomButton from '../styles/CustomButton.module.scss'
+import CustomButton from './CustomButton.js'
 import CardItem from './CardItem'
 import { connect } from 'react-redux'
 import { selectCardItems } from '../redux/card/card.selectors'
