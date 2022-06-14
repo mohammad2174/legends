@@ -1,7 +1,6 @@
 .collectionpreview {
     display: flex;
     flex-direction: column;
-    margin-bottom: 30px;
 
     .title {
         font-size: 28px;
@@ -9,7 +8,9 @@
     }
 
     .preview {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        grid-row-gap: 50px;
+        padding: 10px;
     }
 }
