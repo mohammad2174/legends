@@ -2,6 +2,7 @@ import { Component } from 'react';
 import SHOP_DATA from '../shop.data';
 import CollectionItem from '../../components/CollectionItem';
 import styles from '../../styles/CollectionPreview.module.scss'
+import Header from '../../components/Header';
 
 class Sneakers extends Component {
     constructor(props) {
@@ -14,10 +15,11 @@ class Sneakers extends Component {
         const { collections } = this.state
         return (
             <div className={styles.collectionpreview}>
-                <h1 className={styles.title}>{collections[0].title.toUpperCase()}</h1>
+                <Header />
+                <h1 className={styles.title}>{collections[1].title.toUpperCase()}</h1>
                 <div className={styles.preview}>
                     {
-                        collections[1].items.filter((item, index) => index < 4).map(({ id, ...item }) => (
+                        collections[1].items.map(({ id, ...item }) => (
                             <CollectionItem key={item.id} item={item} />
                         ))
                     }
